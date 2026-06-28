@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SparkClaw — The accelerator that backs the spark</title>
+<meta name="description" content="SparkClaw is the accelerator that backs founders before the world catches on. Twelve weeks, real mentors, and a push when it counts. Applications for Cohort 2026 are open." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper: '#FFFFFF',
+          ink: '#1A1A1A',
+          red: '#E5241B',
+          'red-deep': '#B81A12',
+          orange: '#F5821F',
+          yellow: '#FFC42E',
+          green: '#46B414',
+          blue: '#0072BC',
+          pink: '#EE1A6E',
+        },
+        fontFamily: {
+          display: ['Poppins', 'system-ui', 'sans-serif'],
+          body: ['Inter', 'system-ui', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  :root {
+    --paper: #ffffff;
+    --ink: #1a1a1a;
+    --red: #e5241b;
+    --orange: #f5821f;
+    --yellow: #ffc42e;
+    --green: #46b414;
+    --blue: #0072bc;
+    --pink: #ee1a6e;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, .font-display { font-family: 'Poppins', system-ui, sans-serif; }
+
+  .tracking-display { letter-spacing: -0.035em; }
+
+  /* Subtle paper grain for depth — sits under everything, very low opacity */
+  .grain::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---- Tinted shadow system (base → elevated → floating) ---- */
+  .shadow-card {
+    box-shadow: 0 1px 2px rgba(26, 26, 26, 0.04), 0 14px 30px -16px rgba(26, 26, 26, 0.16);
+  }
+  .shadow-float {
+    box-shadow: 0 2px 4px rgba(26, 26, 26, 0.05), 0 28px 50px -22px rgba(229, 36, 27, 0.28);
+  }
+  .shadow-red {
+    box-shadow: 0 10px 24px -10px rgba(229, 36, 27, 0.45), 0 2px 6px -2px rgba(229, 36, 27, 0.3);
+  }
+
+  /* ---- Buttons ---- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    border-radius: 9999px;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+    will-change: transform;
+  }
+  .btn:focus-visible {
+    outline: 3px solid rgba(229, 36, 27, 0.45);
+    outline-offset: 3px;
+  }
+  .btn-primary { background: var(--red); color: #fff; }
+  .btn-primary:hover { background: var(--red-deep, #b81a12); transform: translateY(-2px); box-shadow: 0 16px 30px -12px rgba(229, 36, 27, 0.55); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid rgba(26, 26, 26, 0.16); }
+  .btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); background: rgba(26,26,26,0.03); }
+  .btn-ghost:active { transform: translateY(0); }
+  .btn-white { background: #fff; color: var(--ink); }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -12px rgba(0,0,0,0.35); }
+  .btn-white:active { transform: translateY(0); }
+
+  .navlink { position: relative; transition: color 0.18s ease; }
+  .navlink::after {
+    content: '';
+    position: absolute; left: 0; bottom: -4px;
+    width: 100%; height: 2px; background: var(--red);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .navlink:hover { color: var(--red); }
+  .navlink:hover::after { transform: scaleX(1); }
+  .navlink:focus-visible { outline: 2px solid rgba(229,36,27,0.5); outline-offset: 4px; border-radius: 2px; }
+
+  /* ---- Confetti shard signature ---- */
+  .shard {
+    position: absolute;
+    width: 7px;
+    border-radius: 3px;
+    transform-origin: center;
+  }
+
+  /* eyebrow mini-burst */
+  .eb-shard { display: inline-block; width: 4px; height: 13px; border-radius: 2px; }
+
+  /* Hero ambient color glow */
+  .glow {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(60px);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ---- Hero load animation ---- */
+  @keyframes pop-in {
+    0% { opacity: 0; transform: translateY(18px) scale(0.96); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes burst {
+    0% { opacity: 0; transform: translate(0,0) scale(0.2) rotate(var(--rot)); }
+    60% { opacity: 1; }
+    100% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1) rotate(var(--rot)); }
+  }
+  @keyframes float-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+  .anim-pop { opacity: 0; animation: pop-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .d1 { animation-delay: 0.05s; }
+  .d2 { animation-delay: 0.15s; }
+  .d3 { animation-delay: 0.25s; }
+  .d4 { animation-delay: 0.35s; }
+  .d5 { animation-delay: 0.45s; }
+
+  .hero-shard { opacity: 0; animation: burst 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  .mascot-float { animation: float-bob 6s ease-in-out infinite; }
+
+  /* scroll reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  .momentum-line {
+    background: linear-gradient(90deg, var(--orange), var(--yellow), var(--green), var(--blue), var(--pink));
+  }
+
+  .card-lift { transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease; }
+  .card-lift:hover { transform: translateY(-6px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+    .anim-pop { opacity: 1; }
+    .hero-shard { opacity: 1; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+
+<body class="grain">
+<div class="relative z-10">
+
+  <!-- ====================== NAV ====================== -->
+  <header class="sticky top-0 z-50 border-b border-ink/5 bg-paper/80 backdrop-blur-md">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+      <a href="#top" class="flex items-center" aria-label="SparkClaw home">
+        <img src="brand_assets/SparkClaw%20Logo_Black.png" alt="SparkClaw" class="h-9 w-auto" />
+      </a>
+      <div class="hidden items-center gap-9 text-[15px] font-medium md:flex">
+        <a href="#program" class="navlink">Program</a>
+        <a href="#how" class="navlink">How it works</a>
+        <a href="#founders" class="navlink">Founders</a>
+        <a href="#faq" class="navlink">FAQ</a>
+      </div>
+      <a href="#apply" class="btn btn-primary shadow-red px-5 py-2.5 text-[15px]">Apply now</a>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <!-- ====================== HERO ====================== -->
+    <section class="relative overflow-hidden">
+      <!-- ambient confetti-tinted glows -->
+      <div class="glow" style="background: var(--yellow); width: 360px; height: 360px; top: -60px; right: 8%;"></div>
+      <div class="glow" style="background: var(--blue); width: 320px; height: 320px; bottom: -80px; right: 22%; opacity:0.35;"></div>
+      <div class="glow" style="background: var(--pink); width: 260px; height: 260px; top: 30%; left: -60px; opacity:0.28;"></div>
+
+      <div class="mx-auto grid max-w-7xl items-center gap-12 px-6 pb-20 pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-6 lg:px-10 lg:pb-28 lg:pt-20">
+        <!-- copy -->
+        <div class="relative">
+          <span class="anim-pop d1 mb-6 inline-flex items-center gap-2 rounded-full border border-red/20 bg-red/5 px-4 py-1.5 text-[13px] font-semibold uppercase tracking-[0.14em] text-red">
+            <span class="h-2 w-2 rounded-full bg-red"></span>
+            AI-native cohort 2026 · Applications open
+          </span>
+
+          <h1 class="anim-pop d2 tracking-display text-[2.7rem] font-bold leading-[1.04] text-ink sm:text-6xl lg:text-[4.1rem]">
+            Your team is<br class="hidden sm:block" /> AI now.<br />
+            <span class="text-red">Unlocking unseen<br class="hidden sm:block" /> growth potential.</span>
+          </h1>
+
+          <p class="anim-pop d3 mt-7 max-w-xl text-lg text-ink/70">
+            SparkClaw backs AI-native builders — solo founders and small teams alike.
+            We pair you with operators and entrepreneurs who've been there, to help you
+            build and grow in the age of agentic AI.
+          </p>
+
+          <div class="anim-pop d4 mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a href="#apply" class="btn btn-primary shadow-red px-7 py-3.5 text-base">
+              Apply to the cohort
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="#how" class="btn btn-ghost px-7 py-3.5 text-base">See how it works</a>
+          </div>
+
+          <div class="anim-pop d5 mt-9 flex items-center gap-3 text-sm text-ink/55">
+            <div class="flex -space-x-2">
+              <span class="h-7 w-7 rounded-full border-2 border-paper bg-orange"></span>
+              <span class="h-7 w-7 rounded-full border-2 border-paper bg-green"></span>
+              <span class="h-7 w-7 rounded-full border-2 border-paper bg-blue"></span>
+              <span class="h-7 w-7 rounded-full border-2 border-paper bg-pink"></span>
+            </div>
+            <span><strong class="font-semibold text-ink">300 founders</strong> have already started here.</span>
+          </div>
+        </div>
+
+        <!-- mascot -->
+        <div class="relative flex items-center justify-center">
+          <!-- extended confetti burst (signature) -->
+          <div class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+            <span class="shard hero-shard" style="height:34px;background:var(--orange);top:18%;left:50%;--tx:-150px;--ty:-90px;--rot:-35deg;animation-delay:.2s"></span>
+            <span class="shard hero-shard" style="height:26px;background:var(--green);top:14%;left:50%;--tx:30px;--ty:-130px;--rot:10deg;animation-delay:.28s"></span>
+            <span class="shard hero-shard" style="height:30px;background:var(--pink);top:16%;left:50%;--tx:170px;--ty:-80px;--rot:32deg;animation-delay:.24s"></span>
+            <span class="shard hero-shard" style="height:24px;background:var(--blue);top:50%;left:50%;--tx:230px;--ty:-30px;--rot:60deg;animation-delay:.34s"></span>
+            <span class="shard hero-shard" style="height:28px;background:var(--yellow);top:60%;left:50%;--tx:215px;--ty:90px;--rot:-50deg;animation-delay:.3s"></span>
+            <span class="shard hero-shard" style="height:30px;background:var(--orange);top:78%;left:50%;--tx:80px;--ty:160px;--rot:20deg;animation-delay:.38s"></span>
+            <span class="shard hero-shard" style="height:24px;background:var(--blue);top:80%;left:50%;--tx:-120px;--ty:150px;--rot:-25deg;animation-delay:.32s"></span>
+            <span class="shard hero-shard" style="height:30px;background:var(--pink);top:55%;left:50%;--tx:-230px;--ty:60px;--rot:48deg;animation-delay:.36s"></span>
+            <span class="shard hero-shard" style="height:26px;background:var(--green);top:42%;left:50%;--tx:-240px;--ty:-40px;--rot:-58deg;animation-delay:.26s"></span>
+          </div>
+
+          <div class="anim-pop d3 relative z-10">
+            <div class="mascot-float">
+              <img src="brand_assets/SparkClaw_Character.png" alt="The SparkClaw mascot — a cheerful red crab-bot mid-celebration"
+                   class="w-[78%] max-w-[480px] mx-auto drop-shadow-[0_30px_45px_rgba(229,36,27,0.22)]" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== PROOF BAR ====================== -->
+    <section class="border-y border-ink/8 bg-ink text-paper">
+      <div class="mx-auto grid max-w-7xl grid-cols-2 gap-y-8 px-6 py-12 lg:grid-cols-4 lg:gap-0 lg:px-10">
+        <div class="reveal flex flex-col items-center text-center lg:border-r lg:border-white/12">
+          <span class="tracking-display font-display text-4xl font-bold text-yellow lg:text-5xl">$100K+</span>
+          <span class="mt-1 text-sm text-white/65">in funding via SAFE</span>
+        </div>
+        <div class="reveal flex flex-col items-center text-center lg:border-r lg:border-white/12">
+          <span class="tracking-display font-display text-4xl font-bold text-green lg:text-5xl">300+</span>
+          <span class="mt-1 text-sm text-white/65">founders backed</span>
+        </div>
+        <div class="reveal flex flex-col items-center text-center lg:border-r lg:border-white/12">
+          <span class="tracking-display font-display text-4xl font-bold text-blue lg:text-5xl">15</span>
+          <span class="mt-1 text-sm text-white/65">week sprint</span>
+        </div>
+        <div class="reveal flex flex-col items-center text-center">
+          <span class="tracking-display font-display text-4xl font-bold text-pink lg:text-5xl">Global</span>
+          <span class="mt-1 text-sm text-white/65">network of mentors &amp; founders</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== WHAT YOU GET ====================== -->
+    <section id="program" class="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+      <div class="reveal max-w-2xl">
+        <p class="mb-4 flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.18em] text-red">
+          <span class="eb-shard bg-orange" style="transform:rotate(-12deg)"></span>
+          <span class="eb-shard bg-green" style="transform:rotate(8deg)"></span>
+          <span class="eb-shard bg-blue" style="transform:rotate(-6deg)"></span>
+          What you get
+        </p>
+        <h2 class="tracking-display text-4xl font-bold leading-[1.1] text-ink lg:text-5xl">
+          Everything a founder needs to find the next gear.
+        </h2>
+        <p class="mt-5 text-lg text-ink/65">
+          No fluff, no theater. Just the people, the capital, and the momentum that
+          move an idea from "nice-to-have" to must-have — with paying customers.
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <!-- card -->
+        <article class="reveal card-lift shadow-card rounded-3xl border border-ink/8 bg-paper p-7">
+          <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-red/10 text-red">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 14.1 9.9 22 12 14.1 14.1 12 22 9.9 14.1 2 12 9.9 9.9Z"/></svg>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-semibold text-ink">A check to start</h3>
+          <p class="mt-2.5 text-[15px] text-ink/65">$100,000+ on a simple SAFE. Enough runway to build and ship without sweating the bank balance.</p>
+        </article>
+        <article class="reveal card-lift shadow-card rounded-3xl border border-ink/8 bg-paper p-7">
+          <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-green/12 text-green">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88"/></svg>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-semibold text-ink">Mentors who've done it</h3>
+          <p class="mt-2.5 text-[15px] text-ink/65">Operators who've shipped, raised, and scaled — in your corner every week.</p>
+        </article>
+        <article class="reveal card-lift shadow-card rounded-3xl border border-ink/8 bg-paper p-7">
+          <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue/12 text-blue">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-semibold text-ink">An AI stack, ready to go</h3>
+          <p class="mt-2.5 text-[15px] text-ink/65">Credits, models, and agent tooling so your team of agents is running from day one.</p>
+        </article>
+        <article class="reveal card-lift shadow-card rounded-3xl border border-ink/8 bg-paper p-7">
+          <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-pink/12 text-pink">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-semibold text-ink">From build to paying customers</h3>
+          <p class="mt-2.5 text-[15px] text-ink/65">We help you find the wedge, the pricing, and the first customers who say yes.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ====================== HOW IT WORKS ====================== -->
+    <section id="how" class="relative bg-[#FBF7F2]">
+      <div class="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+        <div class="reveal max-w-2xl">
+          <p class="mb-4 flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.18em] text-red">
+            <span class="eb-shard bg-yellow" style="transform:rotate(-12deg)"></span>
+            <span class="eb-shard bg-pink" style="transform:rotate(8deg)"></span>
+            <span class="eb-shard bg-green" style="transform:rotate(-6deg)"></span>
+            How it works
+          </p>
+          <h2 class="tracking-display text-4xl font-bold leading-[1.1] text-ink lg:text-5xl">
+            Four gears to Demo Day.
+          </h2>
+          <p class="mt-5 text-lg text-ink/65">
+            Each stage earns the next. You always know where you stand — and what it
+            takes to shift up a gear.
+          </p>
+        </div>
+
+        <!-- momentum line -->
+        <div class="relative mt-16">
+          <div class="momentum-line absolute left-[12.5%] right-[12.5%] top-7 hidden h-[3px] rounded-full lg:block"></div>
+
+          <!-- selection gates (desktop) -->
+          <div class="absolute left-1/4 top-7 z-20 hidden lg:block" aria-hidden="true">
+            <div class="relative -translate-x-1/2 -translate-y-1/2">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full border-2 border-dashed border-ink/30 bg-[#FBF7F2] text-ink/50 shadow-sm">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              </span>
+              <span class="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.16em] text-ink/45">Selection</span>
+            </div>
+          </div>
+          <div class="absolute left-1/2 top-7 z-20 hidden lg:block" aria-hidden="true">
+            <div class="relative -translate-x-1/2 -translate-y-1/2">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full border-2 border-dashed border-ink/30 bg-[#FBF7F2] text-ink/50 shadow-sm">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              </span>
+              <span class="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.16em] text-ink/45">Investment</span>
+            </div>
+          </div>
+
+          <ol class="grid gap-10 lg:grid-cols-4 lg:gap-6">
+            <li class="reveal relative">
+              <div class="flex items-center gap-4 lg:block">
+                <span class="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-orange font-display text-lg font-bold text-white shadow-red">01</span>
+                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6">Apply</h3>
+              </div>
+              <p class="mt-3 text-[15px] text-ink/65">Open applications, open door. Anyone can apply — and every applicant becomes a member of the SparkClaw community from day one.</p>
+            </li>
+            <li class="reveal relative">
+              <div class="flex items-center gap-4 lg:block">
+                <span class="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-green font-display text-lg font-bold text-white shadow-red">02</span>
+                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6">Discovery</h3>
+              </div>
+              <span class="mt-3 inline-block rounded-full bg-ink/5 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink/50 lg:hidden">By selection</span>
+              <p class="mt-3 text-[15px] text-ink/65">Selected teams enter Discovery. We work side by side on customer development and building your MVP. Solo? We help you meet potential co-founders through intros and community events.</p>
+            </li>
+            <li class="reveal relative">
+              <div class="flex items-center gap-4 lg:block">
+                <span class="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue font-display text-lg font-bold text-white shadow-red">03</span>
+                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6">Scale</h3>
+              </div>
+              <span class="mt-3 inline-block rounded-full bg-ink/5 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink/50 lg:hidden">By investment</span>
+              <p class="mt-3 text-[15px] text-ink/65">Standout Discovery teams receive investment and shift into Scale — where the focus turns to traction and sharpening unit economics.</p>
+            </li>
+            <li class="reveal relative">
+              <div class="flex items-center gap-4 lg:block">
+                <span class="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-red font-display text-lg font-bold text-white shadow-red">04</span>
+                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6">Demo Day</h3>
+              </div>
+              <p class="mt-3 text-[15px] text-ink/65">The program ends with Demo Day. You pitch, investors lean in, and the next chapter begins.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== FOUNDERS ====================== -->
+    <section id="founders" class="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+      <div class="reveal max-w-2xl">
+        <p class="mb-4 flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.18em] text-red">
+          <span class="eb-shard bg-blue" style="transform:rotate(-12deg)"></span>
+          <span class="eb-shard bg-orange" style="transform:rotate(8deg)"></span>
+          <span class="eb-shard bg-pink" style="transform:rotate(-6deg)"></span>
+          Founders
+        </p>
+        <h2 class="tracking-display text-4xl font-bold leading-[1.1] text-ink lg:text-5xl">
+          Entrepreneurs Growing Entrepreneurs
+        </h2>
+      </div>
+
+      <div class="mt-14 grid gap-6 lg:grid-cols-3">
+        <figure class="reveal card-lift shadow-card flex flex-col rounded-3xl border border-ink/8 bg-paper p-8">
+          <div class="mb-5 flex gap-1 text-yellow" aria-hidden="true">★★★★★</div>
+          <blockquote class="flex-1 text-[17px] leading-relaxed text-ink/80">
+            "Every day as a founder is a battle. Walk that path alongside people who have engraved the lessons of success and failure into their bones. SparkLabs' partners, mentors, and founders from every batch will be on your side."
+          </blockquote>
+          <figcaption class="mt-7 flex items-center gap-3">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-orange font-display font-semibold text-white">B</span>
+            <span>
+              <span class="block font-display font-semibold text-ink">Bokkee Lee</span>
+              <span class="block text-sm text-ink/55">CEO, Wanted</span>
+            </span>
+          </figcaption>
+        </figure>
+
+        <figure class="reveal card-lift shadow-float flex flex-col rounded-3xl border-2 border-red/15 bg-paper p-8">
+          <div class="mb-5 flex gap-1 text-yellow" aria-hidden="true">★★★★★</div>
+          <blockquote class="flex-1 text-[17px] leading-relaxed text-ink/80">
+            "We grew rapidly thanks to the SparkLabs batch program. Through weekly testing and mentoring, we nailed the EV (early-vangelist) concept, acquired 200,000 subscribers, and successfully raised investment."
+          </blockquote>
+          <figcaption class="mt-7 flex items-center gap-3">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-blue font-display font-semibold text-white">J</span>
+            <span>
+              <span class="block font-display font-semibold text-ink">Jeongyoon Lee</span>
+              <span class="block text-sm text-ink/55">CEO, Billy</span>
+            </span>
+          </figcaption>
+        </figure>
+
+        <figure class="reveal card-lift shadow-card flex flex-col rounded-3xl border border-ink/8 bg-paper p-8">
+          <div class="mb-5 flex gap-1 text-yellow" aria-hidden="true">★★★★★</div>
+          <blockquote class="flex-1 text-[17px] leading-relaxed text-ink/80">
+            "SparkLabs played a huge role in helping us raise Series A and Series B funding and expand globally in just one year. Being able to work with SparkLabs as both an investor and a partner while continuously introducing our product to customers across multiple countries is a truly invaluable experience."
+          </blockquote>
+          <figcaption class="mt-7 flex items-center gap-3">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-green font-display font-semibold text-white">D</span>
+            <span>
+              <span class="block font-display font-semibold text-ink">Dino Ha</span>
+              <span class="block text-sm text-ink/55">CEO, MBX</span>
+            </span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ====================== FINAL CTA ====================== -->
+    <section id="apply" class="relative overflow-hidden bg-red px-6 py-24 text-paper lg:py-32">
+      <!-- confetti burst signature -->
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <span class="shard" style="height:40px;background:var(--yellow);top:14%;left:12%;transform:rotate(-30deg)"></span>
+        <span class="shard" style="height:28px;background:#fff;top:24%;left:24%;transform:rotate(18deg);opacity:.7"></span>
+        <span class="shard" style="height:34px;background:var(--orange);top:68%;left:9%;transform:rotate(40deg)"></span>
+        <span class="shard" style="height:30px;background:var(--green);top:80%;left:20%;transform:rotate(-18deg)"></span>
+        <span class="shard" style="height:38px;background:var(--blue);top:18%;right:14%;transform:rotate(28deg)"></span>
+        <span class="shard" style="height:26px;background:var(--pink);top:30%;right:8%;transform:rotate(-22deg)"></span>
+        <span class="shard" style="height:34px;background:var(--yellow);top:72%;right:12%;transform:rotate(34deg)"></span>
+        <span class="shard" style="height:28px;background:#fff;top:84%;right:24%;transform:rotate(-12deg);opacity:.7"></span>
+      </div>
+
+      <div class="reveal relative mx-auto max-w-3xl text-center">
+        <img src="brand_assets/SparkClaw_Character.png" alt="" class="mx-auto w-40 drop-shadow-[0_20px_30px_rgba(0,0,0,0.25)]" aria-hidden="true" />
+        <h2 class="tracking-display mt-6 text-4xl font-bold leading-[1.08] sm:text-5xl lg:text-[3.5rem]">
+          Ready when you are.
+        </h2>
+        <p class="mx-auto mt-5 max-w-xl text-lg text-white/85">
+          Applications for the AI-native cohort close August 15. Bring the spark and
+          your AI edge — we'll bring the capital, the mentors, and the global network.
+        </p>
+        <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="#" class="btn btn-white px-8 py-4 text-base">Apply to the cohort <span aria-hidden="true">→</span></a>
+          <a href="#program" class="btn px-8 py-4 text-base text-white ring-1 ring-inset ring-white/40 hover:bg-white/10">Talk to the team</a>
+        </div>
+        <p class="mt-6 text-sm text-white/70">Takes 10 minutes. No deck required — just tell us what you're building with AI.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====================== FOOTER ====================== -->
+  <footer class="bg-ink text-paper">
+    <div class="mx-auto max-w-7xl px-6 py-16 lg:px-10">
+      <div class="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div>
+          <img src="brand_assets/SparkClaw%20Logo_White.png" alt="SparkClaw" class="h-9 w-auto" />
+          <p class="mt-5 max-w-xs text-[15px] text-white/55">
+            The accelerator that backs founders before the world catches on.
+          </p>
+        </div>
+        <div>
+          <h4 class="font-display text-sm font-semibold uppercase tracking-wider text-white/45">Program</h4>
+          <ul class="mt-4 space-y-3 text-[15px] text-white/70">
+            <li><a href="#program" class="navlink">What you get</a></li>
+            <li><a href="#how" class="navlink">How it works</a></li>
+            <li><a href="#founders" class="navlink">Founders</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-display text-sm font-semibold uppercase tracking-wider text-white/45">Company</h4>
+          <ul class="mt-4 space-y-3 text-[15px] text-white/70">
+            <li><a href="#" class="navlink">About</a></li>
+            <li><a href="#" class="navlink">Mentors</a></li>
+            <li><a href="#" class="navlink">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-display text-sm font-semibold uppercase tracking-wider text-white/45">Stay close</h4>
+          <ul class="mt-4 space-y-3 text-[15px] text-white/70">
+            <li><a href="#" class="navlink">Newsletter</a></li>
+            <li><a href="#" class="navlink">X / Twitter</a></li>
+            <li><a href="#" class="navlink">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-white/45 sm:flex-row">
+        <p>© 2026 SparkClaw. Built for founders with a spark.</p>
+        <div class="flex gap-6">
+          <a href="#" class="navlink">Privacy</a>
+          <a href="#" class="navlink">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>
+</body>
+</html>

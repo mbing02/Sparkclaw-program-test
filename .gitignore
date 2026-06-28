@@ -1,0 +1,6 @@
+# Build artifacts / scratch
+temporary screenshots/
+node_modules/
+
+# Clone reference material (separate project)
+inspiration assets/
