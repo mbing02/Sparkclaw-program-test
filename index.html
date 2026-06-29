@@ -8,7 +8,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -106,6 +106,38 @@
   .btn-white:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -12px rgba(0,0,0,0.35); }
   .btn-white:active { transform: translateY(0); }
 
+  /* ---- Korean font fallback: Latin stays Poppins/Inter, Hangul falls to Noto Sans KR ---- */
+  body.lang-ko { font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif; word-break: keep-all; }
+  body.lang-ko h1, body.lang-ko h2, body.lang-ko h3, body.lang-ko h4,
+  body.lang-ko .font-display { font-family: 'Poppins', 'Noto Sans KR', system-ui, sans-serif; }
+  /* Korean rarely needs the tight Latin tracking; let it breathe a touch */
+  body.lang-ko .tracking-display { letter-spacing: -0.01em; }
+
+  /* ---- Language switcher (segmented pill) ---- */
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px;
+    border-radius: 9999px;
+    border: 1.5px solid rgba(26, 26, 26, 0.14);
+    background: rgba(26, 26, 26, 0.02);
+  }
+  .lang-opt {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    padding: 6px 11px;
+    border-radius: 9999px;
+    color: rgba(26, 26, 26, 0.5);
+    transition: color 0.18s ease, background-color 0.18s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .lang-opt:hover { color: var(--ink); }
+  .lang-opt:active { transform: scale(0.94); }
+  .lang-opt:focus-visible { outline: 2px solid rgba(229, 36, 27, 0.5); outline-offset: 2px; }
+  .lang-opt[aria-pressed="true"] { background: var(--ink); color: #fff; }
+
   .navlink { position: relative; transition: color 0.18s ease; }
   .navlink::after {
     content: '';
@@ -193,12 +225,18 @@
         <img src="brand_assets/SparkClaw%20Logo_Black.png" alt="SparkClaw" class="h-9 w-auto" />
       </a>
       <div class="hidden items-center gap-9 text-[15px] font-medium md:flex">
-        <a href="#program" class="navlink">Program</a>
-        <a href="#how" class="navlink">How it works</a>
-        <a href="#founders" class="navlink">Founders</a>
-        <a href="#faq" class="navlink">FAQ</a>
+        <a href="#program" class="navlink" data-i18n="nav.program">Program</a>
+        <a href="#how" class="navlink" data-i18n="nav.how">How it works</a>
+        <a href="#founders" class="navlink" data-i18n="nav.founders">Founders</a>
+        <a href="#faq" class="navlink" data-i18n="nav.faq">FAQ</a>
       </div>
-      <a href="#apply" class="btn btn-primary shadow-red px-5 py-2.5 text-[15px]">Apply now</a>
+      <div class="flex items-center gap-3 sm:gap-4">
+        <div class="lang-switch" role="group" aria-label="Language / 언어">
+          <button type="button" class="lang-opt" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" class="lang-opt" data-lang="ko" aria-pressed="false">한국어</button>
+        </div>
+        <a href="#apply" class="btn btn-primary shadow-red px-4 py-2.5 text-[15px] sm:px-5" data-i18n="nav.apply">Apply now</a>
+      </div>
     </nav>
   </header>
 
@@ -216,15 +254,15 @@
         <div class="relative">
           <span class="anim-pop d1 mb-6 inline-flex items-center gap-2 rounded-full border border-red/20 bg-red/5 px-4 py-1.5 text-[13px] font-semibold uppercase tracking-[0.14em] text-red">
             <span class="h-2 w-2 rounded-full bg-red"></span>
-            AI-native cohort 2026 · Applications open
+            <span data-i18n="hero.badge">AI-native cohort 2026 · Applications open</span>
           </span>
 
-          <h1 class="anim-pop d2 tracking-display text-[2.7rem] font-bold leading-[1.04] text-ink sm:text-6xl lg:text-[4.1rem]">
+          <h1 class="anim-pop d2 tracking-display text-[2.7rem] font-bold leading-[1.04] text-ink sm:text-6xl lg:text-[4.1rem]" data-i18n-html="hero.title">
             Your team is<br class="hidden sm:block" /> AI now.<br />
             <span class="text-red">Unlocking unseen<br class="hidden sm:block" /> growth potential.</span>
           </h1>
 
-          <p class="anim-pop d3 mt-7 max-w-xl text-lg text-ink/70">
+          <p class="anim-pop d3 mt-7 max-w-xl text-lg text-ink/70" data-i18n="hero.body">
             SparkClaw backs AI-native builders — solo founders and small teams alike.
             We pair you with operators and entrepreneurs who've been there, to help you
             build and grow in the age of agentic AI.
@@ -232,10 +270,10 @@
 
           <div class="anim-pop d4 mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
             <a href="#apply" class="btn btn-primary shadow-red px-7 py-3.5 text-base">
-              Apply to the cohort
+              <span data-i18n="hero.cta1">Apply to the cohort</span>
               <span aria-hidden="true">→</span>
             </a>
-            <a href="#how" class="btn btn-ghost px-7 py-3.5 text-base">See how it works</a>
+            <a href="#how" class="btn btn-ghost px-7 py-3.5 text-base" data-i18n="hero.cta2">See how it works</a>
           </div>
 
           <div class="anim-pop d5 mt-9 flex items-center gap-3 text-sm text-ink/55">
@@ -245,7 +283,7 @@
               <span class="h-7 w-7 rounded-full border-2 border-paper bg-blue"></span>
               <span class="h-7 w-7 rounded-full border-2 border-paper bg-pink"></span>
             </div>
-            <span><strong class="font-semibold text-ink">300 founders</strong> have already started here.</span>
+            <span data-i18n-html="hero.social"><strong class="font-semibold text-ink">300 founders</strong> have already started here.</span>
           </div>
         </div>
 
@@ -279,19 +317,19 @@
       <div class="mx-auto grid max-w-7xl grid-cols-2 gap-y-8 px-6 py-12 lg:grid-cols-4 lg:gap-0 lg:px-10">
         <div class="reveal flex flex-col items-center text-center lg:border-r lg:border-white/12">
           <span class="tracking-display font-display text-4xl font-bold text-yellow lg:text-5xl">$100K+</span>
-          <span class="mt-1 text-sm text-white/65">in funding via SAFE</span>
+          <span class="mt-1 text-sm text-white/65" data-i18n="proof.funding">in funding via SAFE</span>
         </div>
         <div class="reveal flex flex-col items-center text-center lg:border-r lg:border-white/12">
           <span class="tracking-display font-display text-4xl font-bold text-green lg:text-5xl">300+</span>
-          <span class="mt-1 text-sm text-white/65">founders backed</span>
+          <span class="mt-1 text-sm text-white/65" data-i18n="proof.founders">founders backed</span>
         </div>
         <div class="reveal flex flex-col items-center text-center lg:border-r lg:border-white/12">
           <span class="tracking-display font-display text-4xl font-bold text-blue lg:text-5xl">15</span>
-          <span class="mt-1 text-sm text-white/65">week sprint</span>
+          <span class="mt-1 text-sm text-white/65" data-i18n="proof.weeks">week sprint</span>
         </div>
         <div class="reveal flex flex-col items-center text-center">
-          <span class="tracking-display font-display text-4xl font-bold text-pink lg:text-5xl">Global</span>
-          <span class="mt-1 text-sm text-white/65">network of mentors &amp; founders</span>
+          <span class="tracking-display font-display text-4xl font-bold text-pink lg:text-5xl" data-i18n="proof.globalNum">Global</span>
+          <span class="mt-1 text-sm text-white/65" data-i18n="proof.global">network of mentors &amp; founders</span>
         </div>
       </div>
     </section>
@@ -303,12 +341,12 @@
           <span class="eb-shard bg-orange" style="transform:rotate(-12deg)"></span>
           <span class="eb-shard bg-green" style="transform:rotate(8deg)"></span>
           <span class="eb-shard bg-blue" style="transform:rotate(-6deg)"></span>
-          What you get
+          <span data-i18n="get.eyebrow">What you get</span>
         </p>
-        <h2 class="tracking-display text-4xl font-bold leading-[1.1] text-ink lg:text-5xl">
+        <h2 class="tracking-display text-4xl font-bold leading-[1.1] text-ink lg:text-5xl" data-i18n="get.title">
           Everything a founder needs to find the next gear.
         </h2>
-        <p class="mt-5 text-lg text-ink/65">
+        <p class="mt-5 text-lg text-ink/65" data-i18n="get.body">
           No fluff, no theater. Just the people, the capital, and the momentum that
           move an idea from "nice-to-have" to must-have — with paying customers.
         </p>
@@ -320,29 +358,29 @@
           <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-red/10 text-red">
             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 14.1 9.9 22 12 14.1 14.1 12 22 9.9 14.1 2 12 9.9 9.9Z"/></svg>
           </span>
-          <h3 class="mt-5 font-display text-xl font-semibold text-ink">A check to start</h3>
-          <p class="mt-2.5 text-[15px] text-ink/65">$100,000+ on a simple SAFE. Enough runway to build and ship without sweating the bank balance.</p>
+          <h3 class="mt-5 font-display text-xl font-semibold text-ink" data-i18n="get.card1.title">A check to start</h3>
+          <p class="mt-2.5 text-[15px] text-ink/65" data-i18n="get.card1.body">$100,000+ on a simple SAFE. Enough runway to build and ship without sweating the bank balance.</p>
         </article>
         <article class="reveal card-lift shadow-card rounded-3xl border border-ink/8 bg-paper p-7">
           <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-green/12 text-green">
             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88"/></svg>
           </span>
-          <h3 class="mt-5 font-display text-xl font-semibold text-ink">Mentors who've done it</h3>
-          <p class="mt-2.5 text-[15px] text-ink/65">Operators who've shipped, raised, and scaled — in your corner every week.</p>
+          <h3 class="mt-5 font-display text-xl font-semibold text-ink" data-i18n="get.card2.title">Mentors who've done it</h3>
+          <p class="mt-2.5 text-[15px] text-ink/65" data-i18n="get.card2.body">Operators who've shipped, raised, and scaled — in your corner every week.</p>
         </article>
         <article class="reveal card-lift shadow-card rounded-3xl border border-ink/8 bg-paper p-7">
           <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue/12 text-blue">
             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
           </span>
-          <h3 class="mt-5 font-display text-xl font-semibold text-ink">An AI stack, ready to go</h3>
-          <p class="mt-2.5 text-[15px] text-ink/65">Credits, models, and agent tooling so your team of agents is running from day one.</p>
+          <h3 class="mt-5 font-display text-xl font-semibold text-ink" data-i18n="get.card3.title">An AI stack, ready to go</h3>
+          <p class="mt-2.5 text-[15px] text-ink/65" data-i18n="get.card3.body">Credits, models, and agent tooling so your team of agents is running from day one.</p>
         </article>
         <article class="reveal card-lift shadow-card rounded-3xl border border-ink/8 bg-paper p-7">
           <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-pink/12 text-pink">
             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
           </span>
-          <h3 class="mt-5 font-display text-xl font-semibold text-ink">From build to paying customers</h3>
-          <p class="mt-2.5 text-[15px] text-ink/65">We help you find the wedge, the pricing, and the first customers who say yes.</p>
+          <h3 class="mt-5 font-display text-xl font-semibold text-ink" data-i18n="get.card4.title">From build to paying customers</h3>
+          <p class="mt-2.5 text-[15px] text-ink/65" data-i18n="get.card4.body">We help you find the wedge, the pricing, and the first customers who say yes.</p>
         </article>
       </div>
     </section>
@@ -355,12 +393,12 @@
             <span class="eb-shard bg-yellow" style="transform:rotate(-12deg)"></span>
             <span class="eb-shard bg-pink" style="transform:rotate(8deg)"></span>
             <span class="eb-shard bg-green" style="transform:rotate(-6deg)"></span>
-            How it works
+            <span data-i18n="how.eyebrow">How it works</span>
           </p>
-          <h2 class="tracking-display text-4xl font-bold leading-[1.1] text-ink lg:text-5xl">
+          <h2 class="tracking-display text-4xl font-bold leading-[1.1] text-ink lg:text-5xl" data-i18n="how.title">
             Four gears to Demo Day.
           </h2>
-          <p class="mt-5 text-lg text-ink/65">
+          <p class="mt-5 text-lg text-ink/65" data-i18n="how.body">
             Each stage earns the next. You always know where you stand — and what it
             takes to shift up a gear.
           </p>
@@ -376,7 +414,7 @@
               <span class="flex h-7 w-7 items-center justify-center rounded-full border-2 border-dashed border-ink/30 bg-[#FBF7F2] text-ink/50 shadow-sm">
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
               </span>
-              <span class="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.16em] text-ink/45">Selection</span>
+              <span class="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.16em] text-ink/45" data-i18n="how.gate.selection">Selection</span>
             </div>
           </div>
           <div class="absolute left-1/2 top-7 z-20 hidden lg:block" aria-hidden="true">
@@ -384,7 +422,7 @@
               <span class="flex h-7 w-7 items-center justify-center rounded-full border-2 border-dashed border-ink/30 bg-[#FBF7F2] text-ink/50 shadow-sm">
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
               </span>
-              <span class="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.16em] text-ink/45">Investment</span>
+              <span class="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.16em] text-ink/45" data-i18n="how.gate.investment">Investment</span>
             </div>
           </div>
 
@@ -392,32 +430,32 @@
             <li class="reveal relative">
               <div class="flex items-center gap-4 lg:block">
                 <span class="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-orange font-display text-lg font-bold text-white shadow-red">01</span>
-                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6">Apply</h3>
+                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6" data-i18n="how.step1.title">Apply</h3>
               </div>
-              <p class="mt-3 text-[15px] text-ink/65">Open applications, open door. Anyone can apply — and every applicant becomes a member of the SparkClaw community from day one.</p>
+              <p class="mt-3 text-[15px] text-ink/65" data-i18n="how.step1.body">Open applications, open door. Anyone can apply — and every applicant becomes a member of the SparkClaw community from day one.</p>
             </li>
             <li class="reveal relative">
               <div class="flex items-center gap-4 lg:block">
                 <span class="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-green font-display text-lg font-bold text-white shadow-red">02</span>
-                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6">Discovery</h3>
+                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6" data-i18n="how.step2.title">Discovery</h3>
               </div>
-              <span class="mt-3 inline-block rounded-full bg-ink/5 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink/50 lg:hidden">By selection</span>
-              <p class="mt-3 text-[15px] text-ink/65">Selected teams enter Discovery. We work side by side on customer development and building your MVP. Solo? We help you meet potential co-founders through intros and community events.</p>
+              <span class="mt-3 inline-block rounded-full bg-ink/5 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink/50 lg:hidden" data-i18n="how.step2.tag">By selection</span>
+              <p class="mt-3 text-[15px] text-ink/65" data-i18n="how.step2.body">Selected teams enter Discovery. We work side by side on customer development and building your MVP. Solo? We help you meet potential co-founders through intros and community events.</p>
             </li>
             <li class="reveal relative">
               <div class="flex items-center gap-4 lg:block">
                 <span class="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue font-display text-lg font-bold text-white shadow-red">03</span>
-                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6">Scale</h3>
+                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6" data-i18n="how.step3.title">Scale</h3>
               </div>
-              <span class="mt-3 inline-block rounded-full bg-ink/5 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink/50 lg:hidden">By investment</span>
-              <p class="mt-3 text-[15px] text-ink/65">Standout Discovery teams receive investment and shift into Scale — where the focus turns to traction and sharpening unit economics.</p>
+              <span class="mt-3 inline-block rounded-full bg-ink/5 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink/50 lg:hidden" data-i18n="how.step3.tag">By investment</span>
+              <p class="mt-3 text-[15px] text-ink/65" data-i18n="how.step3.body">Standout Discovery teams receive investment and shift into Scale — where the focus turns to traction and sharpening unit economics.</p>
             </li>
             <li class="reveal relative">
               <div class="flex items-center gap-4 lg:block">
                 <span class="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-red font-display text-lg font-bold text-white shadow-red">04</span>
-                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6">Demo Day</h3>
+                <h3 class="font-display text-xl font-semibold text-ink lg:mt-6" data-i18n="how.step4.title">Demo Day</h3>
               </div>
-              <p class="mt-3 text-[15px] text-ink/65">The program ends with Demo Day. You pitch, investors lean in, and the next chapter begins.</p>
+              <p class="mt-3 text-[15px] text-ink/65" data-i18n="how.step4.body">The program ends with Demo Day. You pitch, investors lean in, and the next chapter begins.</p>
             </li>
           </ol>
         </div>
@@ -431,9 +469,9 @@
           <span class="eb-shard bg-blue" style="transform:rotate(-12deg)"></span>
           <span class="eb-shard bg-orange" style="transform:rotate(8deg)"></span>
           <span class="eb-shard bg-pink" style="transform:rotate(-6deg)"></span>
-          Founders
+          <span data-i18n="founders.eyebrow">Founders</span>
         </p>
-        <h2 class="tracking-display text-4xl font-bold leading-[1.1] text-ink lg:text-5xl">
+        <h2 class="tracking-display text-4xl font-bold leading-[1.1] text-ink lg:text-5xl" data-i18n="founders.title">
           Entrepreneurs Growing Entrepreneurs
         </h2>
       </div>
@@ -441,42 +479,42 @@
       <div class="mt-14 grid gap-6 lg:grid-cols-3">
         <figure class="reveal card-lift shadow-card flex flex-col rounded-3xl border border-ink/8 bg-paper p-8">
           <div class="mb-5 flex gap-1 text-yellow" aria-hidden="true">★★★★★</div>
-          <blockquote class="flex-1 text-[17px] leading-relaxed text-ink/80">
+          <blockquote class="flex-1 text-[17px] leading-relaxed text-ink/80" data-i18n="founders.q1">
             "Every day as a founder is a battle. Walk that path alongside people who have engraved the lessons of success and failure into their bones. SparkLabs' partners, mentors, and founders from every batch will be on your side."
           </blockquote>
           <figcaption class="mt-7 flex items-center gap-3">
             <span class="flex h-11 w-11 items-center justify-center rounded-full bg-orange font-display font-semibold text-white">B</span>
             <span>
               <span class="block font-display font-semibold text-ink">Bokkee Lee</span>
-              <span class="block text-sm text-ink/55">CEO, Wanted</span>
+              <span class="block text-sm text-ink/55" data-i18n="founders.r1">CEO, Wanted</span>
             </span>
           </figcaption>
         </figure>
 
         <figure class="reveal card-lift shadow-float flex flex-col rounded-3xl border-2 border-red/15 bg-paper p-8">
           <div class="mb-5 flex gap-1 text-yellow" aria-hidden="true">★★★★★</div>
-          <blockquote class="flex-1 text-[17px] leading-relaxed text-ink/80">
+          <blockquote class="flex-1 text-[17px] leading-relaxed text-ink/80" data-i18n="founders.q2">
             "We grew rapidly thanks to the SparkLabs batch program. Through weekly testing and mentoring, we nailed the EV (early-vangelist) concept, acquired 200,000 subscribers, and successfully raised investment."
           </blockquote>
           <figcaption class="mt-7 flex items-center gap-3">
             <span class="flex h-11 w-11 items-center justify-center rounded-full bg-blue font-display font-semibold text-white">J</span>
             <span>
               <span class="block font-display font-semibold text-ink">Jeongyoon Lee</span>
-              <span class="block text-sm text-ink/55">CEO, Billy</span>
+              <span class="block text-sm text-ink/55" data-i18n="founders.r2">CEO, Billy</span>
             </span>
           </figcaption>
         </figure>
 
         <figure class="reveal card-lift shadow-card flex flex-col rounded-3xl border border-ink/8 bg-paper p-8">
           <div class="mb-5 flex gap-1 text-yellow" aria-hidden="true">★★★★★</div>
-          <blockquote class="flex-1 text-[17px] leading-relaxed text-ink/80">
+          <blockquote class="flex-1 text-[17px] leading-relaxed text-ink/80" data-i18n="founders.q3">
             "SparkLabs played a huge role in helping us raise Series A and Series B funding and expand globally in just one year. Being able to work with SparkLabs as both an investor and a partner while continuously introducing our product to customers across multiple countries is a truly invaluable experience."
           </blockquote>
           <figcaption class="mt-7 flex items-center gap-3">
             <span class="flex h-11 w-11 items-center justify-center rounded-full bg-green font-display font-semibold text-white">D</span>
             <span>
               <span class="block font-display font-semibold text-ink">Dino Ha</span>
-              <span class="block text-sm text-ink/55">CEO, MBX</span>
+              <span class="block text-sm text-ink/55" data-i18n="founders.r3">CEO, MBX</span>
             </span>
           </figcaption>
         </figure>
@@ -499,18 +537,18 @@
 
       <div class="reveal relative mx-auto max-w-3xl text-center">
         <img src="brand_assets/SparkClaw_Character.png" alt="" class="mx-auto w-40 drop-shadow-[0_20px_30px_rgba(0,0,0,0.25)]" aria-hidden="true" />
-        <h2 class="tracking-display mt-6 text-4xl font-bold leading-[1.08] sm:text-5xl lg:text-[3.5rem]">
+        <h2 class="tracking-display mt-6 text-4xl font-bold leading-[1.08] sm:text-5xl lg:text-[3.5rem]" data-i18n="cta.title">
           Ready when you are.
         </h2>
-        <p class="mx-auto mt-5 max-w-xl text-lg text-white/85">
+        <p class="mx-auto mt-5 max-w-xl text-lg text-white/85" data-i18n="cta.body">
           Applications for the AI-native cohort close August 15. Bring the spark and
           your AI edge — we'll bring the capital, the mentors, and the global network.
         </p>
         <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a href="#" class="btn btn-white px-8 py-4 text-base">Apply to the cohort <span aria-hidden="true">→</span></a>
-          <a href="#program" class="btn px-8 py-4 text-base text-white ring-1 ring-inset ring-white/40 hover:bg-white/10">Talk to the team</a>
+          <a href="#" class="btn btn-white px-8 py-4 text-base"><span data-i18n="cta.btn1">Apply to the cohort</span> <span aria-hidden="true">→</span></a>
+          <a href="#program" class="btn px-8 py-4 text-base text-white ring-1 ring-inset ring-white/40 hover:bg-white/10" data-i18n="cta.btn2">Talk to the team</a>
         </div>
-        <p class="mt-6 text-sm text-white/70">Takes 10 minutes. No deck required — just tell us what you're building with AI.</p>
+        <p class="mt-6 text-sm text-white/70" data-i18n="cta.fine">Takes 10 minutes. No deck required — just tell us what you're building with AI.</p>
       </div>
     </section>
   </main>
@@ -521,40 +559,40 @@
       <div class="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <img src="brand_assets/SparkClaw%20Logo_White.png" alt="SparkClaw" class="h-9 w-auto" />
-          <p class="mt-5 max-w-xs text-[15px] text-white/55">
+          <p class="mt-5 max-w-xs text-[15px] text-white/55" data-i18n="footer.tagline">
             The accelerator that backs founders before the world catches on.
           </p>
         </div>
         <div>
-          <h4 class="font-display text-sm font-semibold uppercase tracking-wider text-white/45">Program</h4>
+          <h4 class="font-display text-sm font-semibold uppercase tracking-wider text-white/45" data-i18n="footer.col1">Program</h4>
           <ul class="mt-4 space-y-3 text-[15px] text-white/70">
-            <li><a href="#program" class="navlink">What you get</a></li>
-            <li><a href="#how" class="navlink">How it works</a></li>
-            <li><a href="#founders" class="navlink">Founders</a></li>
+            <li><a href="#program" class="navlink" data-i18n="footer.col1.a">What you get</a></li>
+            <li><a href="#how" class="navlink" data-i18n="footer.col1.b">How it works</a></li>
+            <li><a href="#founders" class="navlink" data-i18n="footer.col1.c">Founders</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="font-display text-sm font-semibold uppercase tracking-wider text-white/45">Company</h4>
+          <h4 class="font-display text-sm font-semibold uppercase tracking-wider text-white/45" data-i18n="footer.col2">Company</h4>
           <ul class="mt-4 space-y-3 text-[15px] text-white/70">
-            <li><a href="#" class="navlink">About</a></li>
-            <li><a href="#" class="navlink">Mentors</a></li>
-            <li><a href="#" class="navlink">Careers</a></li>
+            <li><a href="#" class="navlink" data-i18n="footer.col2.a">About</a></li>
+            <li><a href="#" class="navlink" data-i18n="footer.col2.b">Mentors</a></li>
+            <li><a href="#" class="navlink" data-i18n="footer.col2.c">Careers</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="font-display text-sm font-semibold uppercase tracking-wider text-white/45">Stay close</h4>
+          <h4 class="font-display text-sm font-semibold uppercase tracking-wider text-white/45" data-i18n="footer.col3">Stay close</h4>
           <ul class="mt-4 space-y-3 text-[15px] text-white/70">
-            <li><a href="#" class="navlink">Newsletter</a></li>
+            <li><a href="#" class="navlink" data-i18n="footer.col3.a">Newsletter</a></li>
             <li><a href="#" class="navlink">X / Twitter</a></li>
             <li><a href="#" class="navlink">LinkedIn</a></li>
           </ul>
         </div>
       </div>
       <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-white/45 sm:flex-row">
-        <p>© 2026 SparkClaw. Built for founders with a spark.</p>
+        <p data-i18n="footer.copyright">© 2026 SparkClaw. Built for founders with a spark.</p>
         <div class="flex gap-6">
-          <a href="#" class="navlink">Privacy</a>
-          <a href="#" class="navlink">Terms</a>
+          <a href="#" class="navlink" data-i18n="footer.privacy">Privacy</a>
+          <a href="#" class="navlink" data-i18n="footer.terms">Terms</a>
         </div>
       </div>
     </div>
@@ -563,6 +601,165 @@
 </div>
 
 <script>
+  // ====================== i18n: EN / KO ======================
+  const i18n = {
+    // meta / document
+    "doc.title":        { en: "SparkClaw — The accelerator that backs the spark",
+                          ko: "SparkClaw — 불씨에 베팅하는 액셀러레이터" },
+    "doc.description":  { en: "SparkClaw is the accelerator that backs founders before the world catches on. Twelve weeks, real mentors, and a push when it counts. Applications for Cohort 2026 are open.",
+                          ko: "SparkClaw는 세상이 알아보기 전에 창업자에게 베팅하는 액셀러레이터입니다. 진짜 멘토, 그리고 결정적 순간의 추진력. 2026 코호트 지원이 열렸습니다." },
+
+    // nav
+    "nav.program":      { en: "Program",        ko: "프로그램" },
+    "nav.how":          { en: "How it works",   ko: "진행 방식" },
+    "nav.founders":     { en: "Founders",       ko: "창업자" },
+    "nav.faq":          { en: "FAQ",            ko: "자주 묻는 질문" },
+    "nav.apply":        { en: "Apply now",      ko: "지금 지원하기" },
+
+    // hero
+    "hero.badge":       { en: "AI-native cohort 2026 · Applications open",
+                          ko: "AI 네이티브 코호트 2026 · 지원 접수 중" },
+    "hero.title":       { en: 'Your team is<br class="hidden sm:block" /> AI now.<br /><span class="text-red">Unlocking unseen<br class="hidden sm:block" /> growth potential.</span>',
+                          ko: '이제 당신의 팀은<br class="hidden sm:block" /> AI입니다.<br /><span class="text-red">숨어 있던 성장의<br class="hidden sm:block" /> 잠재력을 깨우세요.</span>' },
+    "hero.body":        { en: "SparkClaw backs AI-native builders — solo founders and small teams alike. We pair you with operators and entrepreneurs who've been there, to help you build and grow in the age of agentic AI.",
+                          ko: "SparkClaw는 AI 네이티브 빌더를 응원합니다 — 1인 창업자든 작은 팀이든 상관없습니다. 직접 부딪혀 본 운영자와 창업가를 곁에 붙여, 에이전트 AI 시대에 제품을 만들고 키워 나가도록 돕습니다." },
+    "hero.cta1":        { en: "Apply to the cohort", ko: "코호트에 지원하기" },
+    "hero.cta2":        { en: "See how it works",    ko: "진행 방식 보기" },
+    "hero.social":      { en: '<strong class="font-semibold text-ink">300 founders</strong> have already started here.',
+                          ko: '<strong class="font-semibold text-ink">창업자 300명</strong>이 이미 여기서 시작했습니다.' },
+
+    // proof bar
+    "proof.funding":    { en: "in funding via SAFE",  ko: "SAFE 방식 투자" },
+    "proof.founders":   { en: "founders backed",      ko: "투자한 창업자" },
+    "proof.weeks":      { en: "week sprint",          ko: "주간 스프린트" },
+    "proof.globalNum":  { en: "Global",               ko: "글로벌" },
+    "proof.global":     { en: "network of mentors & founders", ko: "멘토와 창업자 네트워크" },
+
+    // what you get
+    "get.eyebrow":      { en: "What you get",  ko: "무엇을 받나요" },
+    "get.title":        { en: "Everything a founder needs to find the next gear.",
+                          ko: "다음 단계로 도약하는 데 필요한 모든 것." },
+    "get.body":         { en: 'No fluff, no theater. Just the people, the capital, and the momentum that move an idea from "nice-to-have" to must-have — with paying customers.',
+                          ko: "겉치레도, 보여주기도 없습니다. 아이디어를 ‘있으면 좋은 것’에서 ‘없으면 안 되는 것’으로 — 돈 내는 고객과 함께 — 밀어 올리는 사람, 자본, 그리고 추진력만 드립니다." },
+    "get.card1.title":  { en: "A check to start",     ko: "시작을 위한 투자금" },
+    "get.card1.body":   { en: "$100,000+ on a simple SAFE. Enough runway to build and ship without sweating the bank balance.",
+                          ko: "간단한 SAFE로 10만 달러 이상. 통장 잔고를 걱정하지 않고 만들고 출시할 수 있는 충분한 런웨이." },
+    "get.card2.title":  { en: "Mentors who've done it", ko: "직접 해본 멘토" },
+    "get.card2.body":   { en: "Operators who've shipped, raised, and scaled — in your corner every week.",
+                          ko: "출시하고, 투자받고, 키워 본 운영자들이 매주 당신 편에 섭니다." },
+    "get.card3.title":  { en: "An AI stack, ready to go", ko: "바로 쓰는 AI 스택" },
+    "get.card3.body":   { en: "Credits, models, and agent tooling so your team of agents is running from day one.",
+                          ko: "크레딧, 모델, 에이전트 툴링까지 — 당신의 에이전트 팀이 첫날부터 돌아가도록." },
+    "get.card4.title":  { en: "From build to paying customers", ko: "제품에서 유료 고객까지" },
+    "get.card4.body":   { en: "We help you find the wedge, the pricing, and the first customers who say yes.",
+                          ko: "파고들 지점, 가격, 그리고 ‘예스’라고 답하는 첫 고객을 함께 찾습니다." },
+
+    // how it works
+    "how.eyebrow":          { en: "How it works", ko: "진행 방식" },
+    "how.title":            { en: "Four gears to Demo Day.", ko: "데모 데이까지, 네 단의 기어." },
+    "how.body":             { en: "Each stage earns the next. You always know where you stand — and what it takes to shift up a gear.",
+                              ko: "각 단계가 다음 단계를 여는 자격이 됩니다. 지금 어디에 서 있는지, 다음 기어로 올리려면 무엇이 필요한지 늘 알 수 있습니다." },
+    "how.gate.selection":   { en: "Selection",   ko: "선발" },
+    "how.gate.investment":  { en: "Investment",  ko: "투자" },
+    "how.step1.title":      { en: "Apply", ko: "지원" },
+    "how.step1.body":       { en: "Open applications, open door. Anyone can apply — and every applicant becomes a member of the SparkClaw community from day one.",
+                              ko: "열린 지원, 열린 문. 누구나 지원할 수 있고, 지원하는 순간 모두가 첫날부터 SparkClaw 커뮤니티의 일원이 됩니다." },
+    "how.step2.title":      { en: "Discovery", ko: "디스커버리" },
+    "how.step2.tag":        { en: "By selection", ko: "선발제" },
+    "how.step2.body":       { en: "Selected teams enter Discovery. We work side by side on customer development and building your MVP. Solo? We help you meet potential co-founders through intros and community events.",
+                              ko: "선발된 팀이 디스커버리에 들어옵니다. 고객 개발과 MVP 제작을 나란히 함께합니다. 혼자인가요? 소개와 커뮤니티 행사를 통해 공동창업자가 될 만한 사람을 만나도록 돕습니다." },
+    "how.step3.title":      { en: "Scale", ko: "스케일" },
+    "how.step3.tag":        { en: "By investment", ko: "투자제" },
+    "how.step3.body":       { en: "Standout Discovery teams receive investment and shift into Scale — where the focus turns to traction and sharpening unit economics.",
+                              ko: "두각을 나타낸 디스커버리 팀은 투자를 받고 스케일 단계로 올라섭니다. 이제 초점은 트랙션과 단위 경제성을 다듬는 데 맞춰집니다." },
+    "how.step4.title":      { en: "Demo Day", ko: "데모 데이" },
+    "how.step4.body":       { en: "The program ends with Demo Day. You pitch, investors lean in, and the next chapter begins.",
+                              ko: "프로그램은 데모 데이로 마무리됩니다. 당신이 피칭하고, 투자자들이 귀를 기울이고, 다음 챕터가 시작됩니다." },
+
+    // founders
+    "founders.eyebrow": { en: "Founders", ko: "창업자" },
+    "founders.title":   { en: "Entrepreneurs Growing Entrepreneurs", ko: "창업가가 창업가를 키웁니다" },
+    "founders.q1":      { en: '"Every day as a founder is a battle. Walk that path alongside people who have engraved the lessons of success and failure into their bones. SparkLabs’ partners, mentors, and founders from every batch will be on your side."',
+                          ko: "“창업자의 하루하루는 전투입니다. 성공과 실패의 교훈을 뼛속까지 새긴 사람들과 함께 그 길을 걸으세요. SparkLabs의 파트너, 멘토, 그리고 모든 배치의 창업자들이 당신 편이 되어 줍니다.”" },
+    "founders.r1":      { en: "CEO, Wanted", ko: "원티드 대표" },
+    "founders.q2":      { en: '"We grew rapidly thanks to the SparkLabs batch program. Through weekly testing and mentoring, we nailed the EV (early-vangelist) concept, acquired 200,000 subscribers, and successfully raised investment."',
+                          ko: "“SparkLabs 배치 프로그램 덕분에 빠르게 성장했습니다. 매주의 테스트와 멘토링을 통해 EV(얼리 에반젤리스트) 개념을 정확히 잡았고, 20만 구독자를 확보했으며, 투자 유치에도 성공했습니다.”" },
+    "founders.r2":      { en: "CEO, Billy", ko: "빌리 대표" },
+    "founders.q3":      { en: '"SparkLabs played a huge role in helping us raise Series A and Series B funding and expand globally in just one year. Being able to work with SparkLabs as both an investor and a partner while continuously introducing our product to customers across multiple countries is a truly invaluable experience."',
+                          ko: "“SparkLabs는 단 1년 만에 시리즈 A와 시리즈 B 투자를 유치하고 글로벌로 확장하는 데 큰 역할을 했습니다. 투자자이자 파트너로서 함께하며 여러 나라의 고객에게 우리 제품을 끊임없이 소개할 수 있다는 것은 정말 값진 경험입니다.”" },
+    "founders.r3":      { en: "CEO, MBX", ko: "MBX 대표" },
+
+    // final cta
+    "cta.title":        { en: "Ready when you are.", ko: "당신이 준비되면, 우리도 준비됐습니다." },
+    "cta.body":         { en: "Applications for the AI-native cohort close August 15. Bring the spark and your AI edge — we'll bring the capital, the mentors, and the global network.",
+                          ko: "AI 네이티브 코호트 지원은 8월 15일에 마감됩니다. 당신은 불씨와 AI 강점을 가져오세요 — 자본, 멘토, 글로벌 네트워크는 저희가 준비합니다." },
+    "cta.btn1":         { en: "Apply to the cohort", ko: "코호트에 지원하기" },
+    "cta.btn2":         { en: "Talk to the team",     ko: "팀과 이야기하기" },
+    "cta.fine":         { en: "Takes 10 minutes. No deck required — just tell us what you're building with AI.",
+                          ko: "10분이면 충분합니다. 데크도 필요 없어요 — AI로 무엇을 만들고 있는지만 알려 주세요." },
+
+    // footer
+    "footer.tagline":   { en: "The accelerator that backs founders before the world catches on.",
+                          ko: "세상이 알아보기 전에 창업자에게 베팅하는 액셀러레이터." },
+    "footer.col1":      { en: "Program", ko: "프로그램" },
+    "footer.col1.a":    { en: "What you get",  ko: "무엇을 받나요" },
+    "footer.col1.b":    { en: "How it works",  ko: "진행 방식" },
+    "footer.col1.c":    { en: "Founders",      ko: "창업자" },
+    "footer.col2":      { en: "Company", ko: "회사" },
+    "footer.col2.a":    { en: "About",   ko: "소개" },
+    "footer.col2.b":    { en: "Mentors", ko: "멘토" },
+    "footer.col2.c":    { en: "Careers", ko: "채용" },
+    "footer.col3":      { en: "Stay close", ko: "함께하기" },
+    "footer.col3.a":    { en: "Newsletter", ko: "뉴스레터" },
+    "footer.copyright": { en: "© 2026 SparkClaw. Built for founders with a spark.",
+                          ko: "© 2026 SparkClaw. 불씨를 가진 창업자를 위해 만들었습니다." },
+    "footer.privacy":   { en: "Privacy", ko: "개인정보처리방침" },
+    "footer.terms":     { en: "Terms",   ko: "이용약관" },
+  };
+
+  const LANG_KEY = 'sparkclaw-lang';
+  const langButtons = document.querySelectorAll('.lang-opt');
+  const metaDesc = document.querySelector('meta[name="description"]');
+
+  function setLang(lang) {
+    if (lang !== 'ko') lang = 'en';
+
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const entry = i18n[el.getAttribute('data-i18n')];
+      if (entry && entry[lang] != null) el.textContent = entry[lang];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+      const entry = i18n[el.getAttribute('data-i18n-html')];
+      if (entry && entry[lang] != null) el.innerHTML = entry[lang];
+    });
+
+    document.documentElement.lang = lang;
+    document.title = i18n['doc.title'][lang];
+    if (metaDesc) metaDesc.setAttribute('content', i18n['doc.description'][lang]);
+
+    document.body.classList.toggle('lang-ko', lang === 'ko');
+    document.body.classList.toggle('lang-en', lang !== 'ko');
+
+    langButtons.forEach((btn) => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.lang === lang));
+    });
+
+    try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+  }
+
+  langButtons.forEach((btn) => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
+  });
+
+  // Init priority: ?lang= in URL → saved choice → Korean browsers default to KO → EN
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  let initial = (urlLang === 'ko' || urlLang === 'en') ? urlLang : null;
+  if (!initial) { try { initial = localStorage.getItem(LANG_KEY); } catch (e) {} }
+  if (!initial) {
+    initial = (navigator.language || '').toLowerCase().startsWith('ko') ? 'ko' : 'en';
+  }
+  setLang(initial);
+
   // Scroll reveal
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
