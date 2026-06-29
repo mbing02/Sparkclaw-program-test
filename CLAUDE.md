@@ -3,6 +3,11 @@
 ## Always Do First
 - **Invoke the `frontend-design` skill** before writing any frontend code, every session, no exceptions.
 
+## Version Control — NEVER Push Without Approval
+- **Never run `git push` (or any command that pushes to a remote / GitHub) without the user's explicit approval in the current conversation.** This includes `git push`, `git push --force`, creating PRs that push, and any tool or skill that pushes.
+- Committing locally is fine. Pushing to GitHub is NOT — always stop and ask first, every time, even if the user previously approved a different push.
+- If a skill or workflow would push as part of its steps (e.g. a "ship" or "deploy" flow), pause at the push step and ask for explicit confirmation before proceeding.
+
 ## Reference Images
 - If a reference image is provided: match layout, spacing, typography, and color exactly. Swap in placeholder content (images via `https://placehold.co/`, generic copy). Do not improve or add to the design.
 - If no reference image: design from scratch with high craft (see guardrails below).
