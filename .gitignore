@@ -4,3 +4,5 @@ node_modules/
 
 # Clone reference material (separate project)
 inspiration assets/
+.vercel
+.env*
